@@ -1,0 +1,48 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class node5 as ""
+class node7 as ""
+class Project {
+   project_id:  Integer 
+   project_name:  String 
+}
+class ProjectEventUpdate {
+   projectEventUpdate_id:  Integer 
+}
+class Todo {
+   todo_id:  Integer 
+   details:  String 
+   subject:  String 
+}
+class TodoComments {
+   todoComment_id:  Integer 
+}
+class TodoTags {
+   todoTag_id:  Integer 
+   tagMap:  HashMap<String, String> 
+}
+class TodoUpdates {
+   todoUpdate_id:  Integer 
+}
+class TodoWatchers {
+   todoWatcher_id:  Integer 
+   login:  String 
+}
+
+ProjectEventUpdate  *-[#595959,plain]-  node5              
+ProjectEventUpdate "0..*" -[#595959,plain]-> "0..1" Project            
+Todo               "0..1" -[#595959,plain]-> "0..*" TodoComments       
+Todo               "0..1" -[#595959,plain]-> "0..*" TodoTags           
+Todo               "0..1" -[#595959,plain]-> "0..*" TodoUpdates        
+Todo               "0..1" -[#595959,plain]-> "0..*" TodoWatchers       
+TodoComments        *-[#595959,plain]-  node7              
+TodoComments       "0..*" -[#595959,plain]-> "0..1" Todo               
+TodoTags           "0..*" -[#595959,plain]-> "0..1" Todo               
+TodoUpdates         *-[#595959,plain]-  node5              
+TodoUpdates        "0..*" -[#595959,plain]-> "0..1" Todo               
+TodoWatchers       "0..*" -[#595959,plain]-> "0..1" Todo               
+@enduml

@@ -9,6 +9,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.util.List;
 
 @ApplicationScoped
@@ -17,8 +19,16 @@ public class SchoolService {
     @PersistenceContext
     EntityManager entityManager;
 
-    @EJB(lookup = "java:global/Student-1.0-SNAPSHOT/StudentServiceImpl!com.sandeep.student.ejb.StudentService")
-    StudentService studentService;
+    private StudentService studentService;
+
+    public SchoolService() {
+        try {
+            InitialContext context = new InitialContext();
+            studentService = (StudentService) context.lookup("java:global/Student-1.0-SNAPSHOT/StudentServiceImpl!com.sandeep.student.ejb.StudentService");
+        } catch (NamingException e) {
+            throw new RuntimeException("Failed to lookup StudentService", e);
+        }
+    }
 
     public List<School> getAllSchools() {
         return entityManager.createQuery("select school from School school", School.class).getResultList();
